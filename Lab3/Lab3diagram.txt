@@ -1,0 +1,70 @@
+classDiagram
+    User --> Account
+    Account --> ATMCard
+
+    Bank o-- ATMMachine
+    Bank o-- User
+
+    Account --> Transaction
+    class Bank {
+        -String name
+        -List bank_all_user[]
+        -List bank_all_atmmachine[]
+        +get_user()
+        +get_atm()
+        +set_user()
+        +set_atmmachine()
+    }
+    class User {
+        -String citizen_id
+        -String name
+        -List user_account[Account]
+        -List user_card[ATMCard]
+        +get_account()
+        +get_atm_card()
+        +add_account()
+        +add_atm_card()
+    }
+    class Account {
+        -String account_number
+        -List owners[User]
+        -List Transaction_list[Transaction]
+        +add_card()
+        +add_transaction()
+        +get_account_number()
+        +get_card()
+        +deposit()
+        +withdraw()
+        +transfer()
+        +get_balance()
+        +get_transaction()
+        +update_balance()
+    }
+    class ATMCard {
+        -String card_number
+        -Instance account[Account]
+        -String pin
+        +get_pin()
+        +get_card_number()
+    }
+    class ATMMachine {
+        -String Machine_ID
+        -Float initial_amount
+        -Float current_amount
+        +insert_card()
+        +get_machine_id()
+        +deposit()
+        +withdraw()
+        +transfer()
+    }
+    class Transaction {
+        -String Type
+        -Float Transac_amount
+        -Float After_amount
+        -Instance machine[ATMMachine]
+        -Instance account[Account]
+        +get_type()
+        +get_amount()
+        +get_after_amount()
+        +get_machine()
+    }
