@@ -1,0 +1,138 @@
+classDiagram
+class Bank {
+    - user_list : List[User]
+    - atm_list : List[ATMMachine]
+    - edc_list : List[EDCMachine]
+    + add_user(user) : str
+    + add_atm_machine(atm) : str
+    + add_edc_machine(edc) : str
+    + search_account(acc_no) : Account
+    + search_edc_machine(edc_no) : EDCMachine
+}
+
+class User {
+    - citizen_id : str
+    - name : str
+    - account_list : List[Account]
+    + citizen_id : str
+    + get_account() : List[Account]
+    + add_account(account) : str
+}
+
+class Account {
+    - account_no : str
+    - user : User
+    - card : Card
+    - balance : float
+    - transaction : List[Transaction]
+    + account_no : str
+    + balance : float
+    + user : User
+    + card : Card
+    + transaction : List[Transaction]
+    + add_card(card) : str
+    + deposit(source, amount) : str
+    + withdraw(source, amount) : str
+    + pay(source, amount, merchant_account) : str
+    + list_transaction() : List[Transaction]
+}
+
+class SavingAccount {
+    + withdraw(source, amount) : str
+    + calculate_interest(year) : float
+}
+
+class FixedAccount {
+    - month : int
+    - deposit_date : datetime
+    + deposit(source, amount) : str
+    + withdraw(source, amount) : str
+}
+
+class CurrentAccount
+
+class Transaction {
+    - transaction_type : str
+    - source : str
+    - amount : float
+    - balance : float
+    + __str__() : str
+}
+
+class Card {
+    - card_no : str
+    - account_no : str
+    - pin : str
+    + card_no : str
+    + pin : str
+    + account_no : str
+    + validate_pin(input_pin) : bool
+    + verify_card(input_pin) : bool
+    + annual_fee : float
+}
+
+class ATMCard
+
+class DebitCard
+
+class ShoppingDebitCard {
+    + calculate_cashback(amount) : float
+}
+
+class TravelDebitCard
+
+class TransactionChannel {
+    - channel_id : str
+    - bank : Bank
+    + channel_id : str
+    + bank : Bank
+}
+
+class ATMMachine {
+    - atm_no : str
+    - money : float
+    - current_card : Card
+    + atm_no : str
+    + available_money : float
+    + insert_card(card, pin) : Account
+    + deposit(account, amount) : str
+    + withdraw(account, amount) : str
+    + transfer(account, target_account, amount) : str
+}
+
+class Counter {
+    - branch_no : str
+    + branch_no : str
+    + verify_identity(account, account_id, citizen_id) : bool
+    + deposit(account, amount, account_id, citizen_id) : str
+    + withdraw(account, amount, account_id, citizen_id) : str
+    + transfer(account, target_account, amount, account_id, citizen_id) : str
+}
+
+class EDCMachine {
+    - edc_no : str
+    - merchant_account : Account
+    - current_card : Card
+    + edc_no : str
+    + merchant_account : Account
+    + swipe_card(card, pin) : str
+    + pay(debit_card, amount) : str
+    + calculate_cashback(debit_card, amount) : float
+}
+
+Bank o-- User
+    Bank o-- ATMMachine
+    Bank o-- EDCMachine
+    TransactionChannel <|-- ATMMachine
+    TransactionChannel <|-- EDCMachine
+    TransactionChannel <|-- Counter
+    User --> Account
+    Account <|-- SavingAccount
+    Account <|-- FixedAccount
+    Account <|-- CurrentAccount
+    Account --> Transaction
+    Account --> Card
+    Card <|-- ATMCard
+    Card <|-- DebitCard
+    DebitCard <|-- ShoppingDebitCard
+    DebitCard <|-- TravelDebitCard
