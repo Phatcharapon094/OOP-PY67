@@ -120,7 +120,7 @@ class Account:
         if amount > self.__balance:
             return "Error : not enough money"
         self.__balance -= amount
-        if source == "SYSTEM" and amount == 300:
+        if source == "SYSTEM" and (amount == 300 or amount == 150):
             transaction = Transaction("F", source, amount, self.__balance)
         else:
             transaction = Transaction("W", source, amount, self.__balance)
@@ -200,7 +200,6 @@ class FixedAccount(Account):
         return result
     
     def withdraw(self, source, amount):
-        """Handle early withdrawal with reduced interest or full withdrawal at maturity."""
         from datetime import datetime
 
         if self.__deposit_date is None:
@@ -277,17 +276,22 @@ class Card:
     def verify_card(self, input_pin):
         """เพิ่ม method สำหรับตรวจสอบบัตร"""
         return self.validate_pin(input_pin)
-    @property
-    def annual_fee(self):
-        return 300
+    
 class ATMCard(Card):
     def __init__(self, card_no, account_no, pin):
         super().__init__(card_no, account_no, pin)
+        
+    @property
+    def annual_fee(self):
+        return 150
     
 
 class DebitCard(Card):
     def __init__(self, card_no, account_no, pin):
         super().__init__(card_no, account_no, pin)
+    @property
+    def annual_fee(self):
+        return 300
 
 class ShoppingDebitCard(DebitCard):
     def __init__(self, card_no, account_no, pin):
@@ -406,6 +410,7 @@ class EDCMachine(TransactionChannel):
     def pay(self, debit_card, amount):
         if not self.Card_Insert:
             return "Error: No card inserted"
+
         if amount <= 0:
             return "Error: Amount must be greater than 0"
 
